@@ -12,7 +12,7 @@ public class FactoryConnection {
 	private static final String PASSWORD = "My@123456%SQL";
 	private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/hotelalura?useTimezone=true&serverTimezone=UTC";
 	
-	public static Connection createConnection() throws SQLException, ClassNotFoundException {
+	public static Connection createPoolConnection() throws SQLException, ClassNotFoundException {
 		ComboPooledDataSource cpds = new ComboPooledDataSource();
 		cpds.setJdbcUrl(DATABASE_URL);
 		cpds.setUser(USERNAME);
