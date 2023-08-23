@@ -6,16 +6,16 @@ public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
-	private String nome;
-	private String senha;
+	private String name;
+	private String password;
 	
 	public User() {
 	}
 
-	public User(Long id, String nome, String senha) {
+	public User(Long id, String name, String password) {
 		this.id = id;
-		this.nome = nome;
-		this.senha = senha;
+		this.name = name;
+		this.password = password;
 	}
 
 	public Long getId() {
@@ -26,20 +26,20 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public String getSenha() {
-		return senha;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	@Override

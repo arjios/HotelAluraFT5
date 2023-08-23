@@ -26,8 +26,8 @@ public class UserDAO implements UserRepository {
 			rs = ps.executeQuery();
 			if(rs.next()) {
 				user.setId(rs.getLong("id"));
-				user.setNome(rs.getString("nome"));
-				user.setSenha(rs.getString("senha"));	
+				user.setName(rs.getString("name"));
+				user.setPassword(rs.getString("password"));	
 			}
 
 		} catch (Exception e) {
