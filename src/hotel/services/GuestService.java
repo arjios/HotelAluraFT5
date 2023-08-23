@@ -19,6 +19,11 @@ public class GuestService {
 		}
 		return guestsDTO;
 	}
+	
+	public GuestDTO findGuest(Long id) {
+		Guest guest = guestRepository.findByIdGuest(id);
+		return new GuestDTO(guest);
+	}
 
 	public void insert(GuestDTO dto) {
 		Guest guest = new Guest();
