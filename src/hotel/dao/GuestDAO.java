@@ -1,9 +1,11 @@
 package hotel.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,10 +30,8 @@ public class GuestDAO implements GuestRepository {
 				guest.setId(rs.getLong("id"));
 				guest.setName(rs.getString("name"));
 				guest.setLastName(rs.getString("lastName"));
-				guest.setPhone(rs.getString("phonne"));				
-//				Date nascimento = rs.getDate("dataBirth");
-//				Instant instantNascimento = nascimento.atStartOfDay().toInstant(ZoneOffset.UTC);
-				guest.setDateBirth(rs.getDate("dateBirth"));				
+				guest.setPhone(rs.getString("phone"));				
+				guest.setDateBirth(rs.getDate("dateBirth").toLocalDate());
 				guest.setIdReservation(rs.getInt("idReservation"));
 				guest.setCountry(rs.getString("country"));
 				guests.add(guest);
@@ -61,10 +61,8 @@ public class GuestDAO implements GuestRepository {
 			ps.setString(1, guest.getName());
 			ps.setString(2, guest.getLastName());
 			ps.setNString(3,  guest.getPhone());		
-//			Date entrada = Date.ofInstant(guest.getDateBirth(), ZoneId.systemDefault());
-//			Date e = Date.valueOf(entrada);		
-			ps.setDate(4,  guest.getDateBirth());
-
+			LocalDate localDate = guest.getDateBirth();
+			ps.setDate(4,  Date.valueOf(localDate));
 			ps.setLong(5, guest.getIdReservation());
 			ps.setNString(6, guest.getCountry());
 			ps.execute();
@@ -99,7 +97,8 @@ public class GuestDAO implements GuestRepository {
 			ps.setString(1, guest.getName());
 			ps.setString(2, guest.getLastName());
 			ps.setString(3, guest.getPhone());
-			ps.setDate(4, guest.getDateBirth());
+			LocalDate localDate = guest.getDateBirth();
+			ps.setDate(4,  Date.valueOf(localDate));
 			ps.setString(5,  guest.getCountry());
 			ps.setLong(6, guest.getIdReservation());
 			ps.execute();

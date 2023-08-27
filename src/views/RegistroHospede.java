@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
 import java.text.Format;
 
 import javax.swing.DefaultComboBoxModel;
@@ -15,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
@@ -23,8 +25,14 @@ import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
 
+import hotel.controllers.GuestController;
+import hotel.dto.GuestDTO;
+
+
 @SuppressWarnings("serial")
 public class RegistroHospede extends JFrame {
+	
+	private Integer idReserva;
 
 	private JPanel contentPane;
 	private JTextField txtNome;
@@ -282,6 +290,21 @@ public class RegistroHospede extends JFrame {
 		btnsalvar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				GuestController guestController = new GuestController();
+				GuestDTO dto = new GuestDTO();
+				dto.setName(txtNome.getText());
+				dto.setLastName(txtSobrenome.getText());
+				dto.setPhone(txtTelefone.getText());
+				
+				dto.setDateBirth(Date.valueOf(txtDataN.toString()));
+				
+				dto.setIdReservation(getIdReserva());
+				dto.setCountry(txtNacionalidade.getSelectedItem().toString());
+				guestController.insert(dto);
+				JOptionPane.showInternalMessageDialog(null, "Registro inserido com sucesso ", "Inserir", 1);
+				ReservasView reservas = new ReservasView();
+				reservas.setVisible(true);
+				dispose();
 			}
 		});
 		btnsalvar.setLayout(null);
@@ -312,7 +335,16 @@ public class RegistroHospede extends JFrame {
 		panel.add(logo);
 		logo.setIcon(new ImageIcon(RegistroHospede.class.getResource("/imagenes/Ha-100px.png")));
 	}
-	
+
+	public Integer getIdReserva() {
+		return idReserva;
+	}
+
+	public void setIdReserva(Integer idReserva) {
+		txtNreserva.setText(idReserva.toString());
+		this.idReserva = idReserva;
+	}
+
 	//Código que permite movimentar a janela pela tela seguindo a posição de "x" y "y"
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {
 	        xMouse = evt.getX();

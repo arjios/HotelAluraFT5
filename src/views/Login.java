@@ -19,11 +19,13 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import hotel.controllers.UserController;
+import hotel.dto.UserDTO;
+
 public class Login extends JFrame {
 
-	/**
-	 * 
-	 */
+	UserController userController = new UserController();
+	
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField txtUsuario;
@@ -236,19 +238,23 @@ public class Login extends JFrame {
 	}
 	
 	private void Login() {
-		 String Usuario= "admin";
-	     String Senha="admin";
+		
+    	UserDTO userDTO = new UserDTO();
 
-	        String senhaa=new String (txtSenha.getPassword());
+		String user = txtUsuario.getText();
+		String pass = String.copyValueOf(txtSenha.getPassword());
 
-	        if(txtUsuario.getText().equals(Usuario) && senhaa.equals(Senha)){
+		userDTO = userController.findUserByName(user);
+
+    		if(user.equals(userDTO.getName()) && pass.equals(userDTO.getPassword())) {
 	            MenuUsuario menu = new MenuUsuario();
 	            menu.setVisible(true);
-	            dispose();	 
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario ou Senha não válidos");
-	        }
-	} 
+	            dispose();
+    		} else {
+    			JOptionPane.showMessageDialog(this, "Usuario ou Senha não válidos");
+    		}
+
+} 
 	
 	//Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"
 	 private void headerMousePressed(java.awt.event.MouseEvent evt) {

@@ -1,7 +1,7 @@
 package hotel.entities;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.time.LocalDate;
 
 public class Guest implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -10,7 +10,7 @@ public class Guest implements Serializable {
 	private String name;
 	private String lastName;
 	private String phone;
-	private Date dateBirth;
+	private LocalDate dateBirth;
 	private Integer idReservation;
 	private String country;
 	
@@ -18,7 +18,7 @@ public class Guest implements Serializable {
 	}
 
 	public Guest(Long id, String name, String lastName, String phone, 
-			Date dateBirth, Integer idReservation, String country) {
+			LocalDate dateBirth, Integer idReservation, String country) {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
@@ -60,11 +60,11 @@ public class Guest implements Serializable {
 		this.phone = phone;
 	}
 
-	public Date getDateBirth() {
+	public LocalDate getDateBirth() {
 		return dateBirth;
 	}
 
-	public void setDateBirth(Date dateBirth) {
+	public void setDateBirth(LocalDate dateBirth) {
 		this.dateBirth = dateBirth;
 	}
 

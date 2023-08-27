@@ -3,13 +3,16 @@ package hotel.services;
 import java.util.HashSet;
 import java.util.Set;
 
+import hotel.dao.GuestDAO;
 import hotel.dto.GuestDTO;
 import hotel.entities.Guest;
 import hotel.repositories.GuestRepository;
 
 public class GuestService {	
 	
-	GuestRepository guestRepository;
+	GuestRepository guestRepository = new GuestDAO();
+	
+	ReservationService reservationService = new ReservationService();
 	
 	public Set<GuestDTO> findAll() {
 		Set<GuestDTO> guestsDTO = new HashSet<>();
@@ -50,12 +53,11 @@ public class GuestService {
 	public Long delete(Object obj) {
 		String id_txt = obj.toString();
 		Long id = (long) Integer.parseUnsignedInt(id_txt);
-//		ReservationService reservaService = new ReservaService();
-//		if(reservationService.delete(id) != null) {
-//			id = guestRepository.delete(id);
-//		} else {
-//			id = null;
-//		}
+		if(reservationService.delete(id) != null) {
+			id = guestRepository.delete(id);
+		} else {
+			id = null;
+		}
 		return id;
 	}
 

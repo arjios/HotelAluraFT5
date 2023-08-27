@@ -1,6 +1,7 @@
 package hotel.dto;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 import hotel.entities.Guest;
 
@@ -10,7 +11,7 @@ public class GuestDTO {
 	private String name;
 	private String lastName;
 	private String phone;
-	private Date dateBirth;
+	private LocalDate dateBirth;
 	private Integer idReservation;
 	private String country;
 	
@@ -18,7 +19,7 @@ public class GuestDTO {
 	}
 
 	public GuestDTO(Long id, String name, String lastName, String phone, 
-			Date dateBirth, Integer idReservation, String country) {
+			LocalDate dateBirth, Integer idReservation, String country) {
 		this.id = id;
 		this.name = name;
 		this.lastName = lastName;
@@ -70,12 +71,12 @@ public class GuestDTO {
 		this.phone = phone;
 	}
 
-	public Date getDateBirth() {
+	public LocalDate getDateBirth() {
 		return dateBirth;
 	}
 
 	public void setDateBirth(Date dateBirth) {
-		this.dateBirth = dateBirth;
+		this.dateBirth = dateBirth.toLocalDate();
 	}
 
 	public Integer getIdReservation() {

@@ -191,13 +191,13 @@ public class MenuUsuario extends JFrame {
 	    panelFecha.setLayout(null);
 	    
 	    JLabel lblTituloPrincipal = new JLabel("Sistema de reservas Hotel Alura");
-	    lblTituloPrincipal.setBounds(180, 11, 356, 42);
+	    lblTituloPrincipal.setBounds(160, 11, 456, 42);
 	    panelFecha.add(lblTituloPrincipal);
 	    lblTituloPrincipal.setForeground(Color.WHITE);
 	    lblTituloPrincipal.setFont(new Font("Roboto", Font.PLAIN, 24));
 	    
 	    JLabel labelFecha = new JLabel("New label");
-	    labelFecha.setBounds(35, 64, 294, 36);
+	    labelFecha.setBounds(35, 64, 360, 46);
 	    panelFecha.add(labelFecha);
 	    labelFecha.setForeground(Color.WHITE);
 	    labelFecha.setFont(new Font("Roboto", Font.PLAIN, 33));
