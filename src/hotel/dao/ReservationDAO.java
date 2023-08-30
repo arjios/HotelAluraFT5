@@ -24,14 +24,15 @@ public class ReservationDAO implements ReservationRepository {
 		try {
 			Connection con = FactoryConnection.createPoolConnection();
 			Statement st =  con.createStatement();
-			st.execute("SELECT * FROM RESERVA");
+			st.execute("SELECT * FROM tb_reservation");
 			ResultSet rs = st.getResultSet();
 			while(rs.next()) {			
 				reservation.setId(rs.getLong("id"));
 				reservation.setCheckin(rs.getDate("checkin"));
 				reservation.setCheckout(rs.getDate("checkout"));
-				reservation.setIdReservation(rs.getInt("idReservation"));				
-				reservation.setPayment(rs.getNString("payment"));		
+				reservation.setValue(rs.getDouble("value"));	
+				reservation.setPayment(rs.getNString("payment"));
+				reservation.setIdReservation(rs.getLong("idReservation"));	
 				reservations.add(reservation);
 			}
 			rs.close();
@@ -47,8 +48,8 @@ public class ReservationDAO implements ReservationRepository {
 
 	@Override
 	public Reservation findByReservation(Long id) {
-		String st = "SELECT id, data_entrada, data_saida, id_reservation, forma_pagamento FROM RESERVA "
-				+ "WHERE id_reservation = ?";
+		String st = "SELECT id, checkin, checkout, value, payment  FROM tb_reservation "
+				+ "WHERE idReservation = ?";
 		try {
 			Connection con = FactoryConnection.createPoolConnection();
 			PreparedStatement ps = con.prepareStatement(st);
@@ -58,8 +59,9 @@ public class ReservationDAO implements ReservationRepository {
 				reservation.setId(rs.getLong("id"));
 				reservation.setCheckin(rs.getDate("checkin"));
 				reservation.setCheckout(rs.getDate("checkout"));
-				reservation.setIdReservation(rs.getInt("idReservation"));				
+				reservation.setValue(rs.getDouble("value"));	
 				reservation.setPayment(rs.getNString("payment"));
+				reservation.setIdReservation(rs.getLong("idReservation"));
 			}
 			rs.close();
 			ps.close();
@@ -73,7 +75,7 @@ public class ReservationDAO implements ReservationRepository {
 
 	@Override
 	public Reservation insert(Reservation entity) {
-		String st = "INSERT INTO RESERVA(data_entrada, data_saida, id_reservation, forma_pagamento) VALUES (?, ?, ?, ?)";
+		String st = "INSERT INTO tb_reservation(checkin, checkout, value, payment, idReservation) VALUES (?, ?, ?, ?, ?)";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
@@ -81,8 +83,9 @@ public class ReservationDAO implements ReservationRepository {
 			ps = con.prepareStatement(st);
 			ps.setDate(1, entity.getCheckin());
 			ps.setDate(2, entity.getCheckout());
-			ps.setLong(3, entity.getIdReservation());
-			ps.setString(4, entity.getPayment());		
+			ps.setDouble(3, entity.getValue());
+			ps.setString(4, entity.getPayment());
+			ps.setLong(5, entity.getIdReservation());
 			ps.execute();
 			ps.close();
 			con.close();
@@ -96,9 +99,9 @@ public class ReservationDAO implements ReservationRepository {
 
 	@Override
 	public Reservation update(Long id, Reservation reservation) {
-		String sql = "UPDATE reservation " + 
-				"SET data_entrada = ?, data_saida = ?, forma_pagamento = ? " + 
-				"WHERE id_reservation = ? ";
+		String sql = "UPDATE tb_reservation " + 
+				"SET checkin = ?, checkout = ?, value = ?, payment = ? " + 
+				"WHERE idReservation = ? ";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
@@ -106,34 +109,33 @@ public class ReservationDAO implements ReservationRepository {
 			ps = con.prepareStatement(sql);
 			ps.setDate(1, reservation.getCheckin());
 			ps.setDate(2, reservation.getCheckout());
-			ps.setString(3, reservation.getPayment());
-			ps.setLong(4, reservation.getIdReservation());
+			ps.setDouble(3, reservation.getValue());
+			ps.setString(4, reservation.getPayment());
+			ps.setLong(5, reservation.getIdReservation());
 			ps.execute();
 
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "Ocorreu erro na leitura da Reservation.", "Error: Reservation Update.", 0);
+			JOptionPane.showMessageDialog(null, "Ocorreu erro na leitura da Reserva.", "Error: Reservation Update.", 0);
 			e.printStackTrace();
 		}	
 		return reservation;
 	}
 
 	@Override
-	public Long delete(Long idReservation) {
-		String st = "DELETE FROM reservation WHERE id_reservation = ?";
+	public Long delete(Long id) {
+		String st = "DELETE FROM tb_reservation WHERE id = ?";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
-			System.out.println("DELETE");
 			con = FactoryConnection.createPoolConnection();
 			ps = con.prepareStatement(st);
-			ps.setLong(1, idReservation);
+			ps.setLong(1, id);
 			ps.execute();
-		} catch (Exception e) {
-			System.out.println("Ocorreu erro na leitura da Reservation.");
-			idReservation = null;
+		} catch(Exception e) {
+			System.out.println("Ocorreu erro na leitura na Delete reserva.");
+			id = null;
 			e.printStackTrace();
 		}
-		return idReservation;
+		return id;
 	}
-	
 }

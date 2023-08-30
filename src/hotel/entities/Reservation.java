@@ -10,16 +10,18 @@ public class Reservation implements Serializable {
 	private Long id;
 	private Date checkin;
 	private Date checkout;
+	private Double value;
 	private String payment;
-	private Integer idReservation;
+	private Long idReservation;
 	
 	public Reservation() {
 	}
 	
-	public Reservation(Long id, Date checkin, Date checkout, String payment, Integer idReservation) {
+	public Reservation(Long id, Date checkin, Date checkout, Double value, String payment, Long idReservation) {
 		this.id = id;
 		this.checkin = checkin;
 		this.checkout = checkout;
+		this.value = value;
 		this.payment = payment;
 		this.idReservation = idReservation;
 	}
@@ -48,6 +50,14 @@ public class Reservation implements Serializable {
 		this.checkout = checkout;
 	}
 	
+	public Double getValue() {
+		return value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
 	public String getPayment() {
 		return payment;
 	}
@@ -56,11 +66,11 @@ public class Reservation implements Serializable {
 		this.payment = payment;
 	}
 	
-	public Integer getIdReservation() {
+	public Long getIdReservation() {
 		return idReservation;
 	}
 	
-	public void setIdReservation(Integer idReservation) {
+	public void setIdReservation(Long idReservation) {
 		this.idReservation = idReservation;
 	}
 	

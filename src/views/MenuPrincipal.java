@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+
 @SuppressWarnings("serial")
 public class MenuPrincipal extends JFrame {
 
@@ -78,10 +79,11 @@ public class MenuPrincipal extends JFrame {
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
-		JLabel lblCopyR = new JLabel("Desenvolvido por Fulanita de Tal © 2023");
-		lblCopyR.setBounds(315, 11, 301, 19);
+		JLabel lblCopyR = new JLabel("Desenvolvido por Antonio Alves do Rosario Junior"
+				+ " - Challenge Alura Oracle Next One FT5 - © 2023");
+		lblCopyR.setBounds(190, 8, 800, 19);
 		lblCopyR.setForeground(new Color(240, 248, 255));
-		lblCopyR.setFont(new Font("Roboto", Font.PLAIN, 16));
+		lblCopyR.setFont(new Font("Roboto", Font.PLAIN, 12));
 		panel_1.add(lblCopyR);
 		
 		//Barra para controlar la ventana 
@@ -104,7 +106,7 @@ public class MenuPrincipal extends JFrame {
 		header.setBackground(Color.WHITE);
 		panel.add(header);
 		
-		//Botón sair
+		//Botón salir
 		JPanel btnexit = new JPanel();
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
@@ -174,5 +176,5 @@ public class MenuPrincipal extends JFrame {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
-}
+    }
 }

@@ -9,18 +9,20 @@ public class ReservationDTO {
 	private Long id;
 	private Date checkin;
 	private Date checkout;
+	private Double value;
 	private String payment;
-	private Integer idReservation;
+	private Long idReservation;
 	
 	public ReservationDTO() {
 
 	}
 
-	public ReservationDTO(Long id, Date checkin, Date checkout, 
-			String payment, Integer idReservation) {
+	public ReservationDTO(Long id, Date checkin, Date checkout, Double value,
+			String payment, Long idReservation) {
 		this.id = id;
 		this.checkin = checkin;
 		this.checkout = checkout;
+		this.value = value;
 		this.payment = payment;
 		this.idReservation = idReservation;
 	}
@@ -29,6 +31,7 @@ public class ReservationDTO {
 		id = entity.getId();
 		checkin = entity.getCheckin();
 		checkout = entity.getCheckout();
+		value = entity.getValue();
 		payment = entity.getPayment();
 		idReservation = entity.getIdReservation();
 	}
@@ -57,6 +60,14 @@ public class ReservationDTO {
 		this.checkout = checkout;
 	}
 
+	public Double getValue() {
+		return value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
+	}
+
 	public String getPayment() {
 		return payment;
 	}
@@ -65,11 +76,11 @@ public class ReservationDTO {
 		this.payment = payment;
 	}
 
-	public Integer getIdReservation() {
+	public Long getIdReservation() {
 		return idReservation;
 	}
 
-	public void setIdReservation(Integer idReservation) {
+	public void setIdReservation(Long idReservation) {
 		this.idReservation = idReservation;
 	}
 

@@ -10,6 +10,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Date;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -26,18 +29,24 @@ import javax.swing.border.LineBorder;
 
 import com.toedter.calendar.JDateChooser;
 
+import hotel.controllers.ReservationController;
+import hotel.dto.ReservationDTO;
 
 @SuppressWarnings("serial")
 public class ReservasView extends JFrame {
 
+//	private ReservationDTO reservaDTO;
+	
+	private ReservationController reservationController;
+	
 	private JPanel contentPane;
 	public static JTextField txtValor;
 	public static JDateChooser txtDataE;
 	public static JDateChooser txtDataS;
-	public static JComboBox<String> txtFormaPagamento;
+	public static JComboBox<Format> txtFormaPagamento;
 	int xMouse, yMouse;
 	private JLabel labelExit;
-	private JLabel lblValorSimbolo; 
+	private JLabel lblValorSimbolo;
 	private JLabel labelAtras;
 
 	/**
@@ -59,6 +68,7 @@ public class ReservasView extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ReservasView() {
 		super("Reserva");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
@@ -73,8 +83,6 @@ public class ReservasView extends JFrame {
 		setResizable(false);
 		setLocationRelativeTo(null);
 		setUndecorated(true);
-		
-
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(null);
@@ -123,13 +131,13 @@ public class ReservasView extends JFrame {
 		
 		JLabel lblCheckIn = new JLabel("DATA DE CHECK IN");
 		lblCheckIn.setForeground(SystemColor.textInactiveText);
-		lblCheckIn.setBounds(68, 136, 169, 14);
+		lblCheckIn.setBounds(68, 136, 200, 14);
 		lblCheckIn.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		panel.add(lblCheckIn);
 		
 		JLabel lblCheckOut = new JLabel("DATA DE CHECK OUT");
 		lblCheckOut.setForeground(SystemColor.textInactiveText);
-		lblCheckOut.setBounds(68, 221, 187, 14);
+		lblCheckOut.setBounds(68, 221, 200, 14);
 		lblCheckOut.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		panel.add(lblCheckOut);
 		
@@ -140,29 +148,36 @@ public class ReservasView extends JFrame {
 		txtDataS.getCalendarButton().setBounds(267, 1, 21, 31);
 		txtDataS.setBackground(Color.WHITE);
 		txtDataS.setFont(new Font("Roboto", Font.PLAIN, 18));
+
 		txtDataS.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-				//Ativa o evento, após o usuário selecionar as datas, o valor da reserva deve ser calculado
+//				if(txtDataE.getDate() != null && txtDataS.getDate() != null) {
+//					Double d = 500.00;
+//					txtValor.setText(CalcDaily.valorDiarias(d, 
+//							txtDataE.getDate(), 
+//							txtDataS.getDate()).toString() + "0");
+//				}
 			}
 		});
 		txtDataS.setDateFormatString("yyyy-MM-dd");
 		txtDataS.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtDataS.setBorder(new LineBorder(new Color(255, 255, 255), 0));
 		panel.add(txtDataS);
-		
-	
-		
+			
 		txtValor = new JTextField();
 		txtValor.setBackground(SystemColor.text);
 		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
 		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 43, 33);
+		txtValor.setBounds(78, 328, 100, 33);
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		panel.add(txtValor);
+
 		txtValor.setColumns(10);
+		txtValor.setText("0,00");
 		
+		panel.add(txtValor);
+	
 		JLabel lblValor = new JLabel("VALOR DA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
 		lblValor.setBounds(72, 303, 196, 14);
@@ -184,7 +199,7 @@ public class ReservasView extends JFrame {
 		panel.add(lblFormaPago);
 		
 		JLabel lblTitulo = new JLabel("SISTEMA DE RESERVAS");
-		lblTitulo.setBounds(109, 60, 219, 42);
+		lblTitulo.setBounds(109, 60, 300, 42);
 		lblTitulo.setForeground(new Color(12, 138, 199));
 		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 20));
 		panel.add(lblTitulo);
@@ -296,11 +311,26 @@ public class ReservasView extends JFrame {
 		btnProximo.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtDataE.getDate() != null && ReservasView.txtDataS.getDate() != null) {		
-					RegistroHospede registro = new RegistroHospede();
-					registro.setVisible(true);
+				if (ReservasView.txtDataE.getDate() != null && ReservasView.txtDataS.getDate() != null) {
+							reservationController = new ReservationController();
+							ReservationDTO reservationDTO = new ReservationDTO();							
+							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+							String format = formatter.format(txtDataE.getDate());
+							reservationDTO.setCheckin(Date.valueOf(format));
+
+							format = formatter.format(txtDataS.getDate());
+							reservationDTO.setCheckout(Date.valueOf(format));
+
+							reservationDTO.setPayment(txtFormaPagamento.getSelectedItem().toString());
+							
+//							reservationDTO = reservationController.insert(reservationDTO);
+
+							RegistroHospede registro = new RegistroHospede(reservationDTO);
+
+
+							registro.setVisible(true);
 				} else {
-					JOptionPane.showMessageDialog(null, "Deve preencher todos os campos.");
+					JOptionPane.showInternalMessageDialog(null, "Deve preencher todos os campos.", "Inserir", 0);
 				}
 			}						
 		});
@@ -324,9 +354,9 @@ public class ReservasView extends JFrame {
 	        yMouse = evt.getY();
 	    }
 
-	    private void headerMouseDragged(java.awt.event.MouseEvent evt) {
+	 private void headerMouseDragged(java.awt.event.MouseEvent evt) {
 	        int x = evt.getXOnScreen();
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
-}
+	 }
 }

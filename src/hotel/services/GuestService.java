@@ -28,15 +28,14 @@ public class GuestService {
 		return new GuestDTO(guest);
 	}
 
-	public void insert(GuestDTO dto) {
+	public GuestDTO insert(GuestDTO dto) {
 		Guest guest = new Guest();
 		guest.setName(dto.getName());
 		guest.setLastName(dto.getLastName());
 		guest.setPhone(dto.getPhone());
 		guest.setDateBirth(dto.getDateBirth());
-		guest.setIdReservation(dto.getIdReservation());
 		guest.setCountry(dto.getCountry());
-		guestRepository.insert(guest);
+		return new GuestDTO(guestRepository.insert(guest));
 	}
 	
 	public Guest update(Long id, GuestDTO dto) {
@@ -45,7 +44,6 @@ public class GuestService {
 		guest.setLastName(dto.getLastName());
 		guest.setPhone(dto.getPhone());
 		guest.setDateBirth(dto.getDateBirth());
-		guest.setIdReservation(dto.getIdReservation());
 		guest.setCountry(dto.getCountry());
 		return guestRepository.update(id, guest);
 	}

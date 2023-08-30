@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Date;
 import java.text.Format;
+import java.text.SimpleDateFormat;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -26,13 +27,15 @@ import javax.swing.border.EmptyBorder;
 import com.toedter.calendar.JDateChooser;
 
 import hotel.controllers.GuestController;
+import hotel.controllers.ReservationController;
 import hotel.dto.GuestDTO;
+import hotel.dto.ReservationDTO;
 
 
 @SuppressWarnings("serial")
 public class RegistroHospede extends JFrame {
 	
-	private Integer idReserva;
+	private Long idReserva;
 
 	private JPanel contentPane;
 	private JTextField txtNome;
@@ -65,6 +68,11 @@ public class RegistroHospede extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistroHospede() {
+		
+	}
+	
+	
+	public RegistroHospede(ReservationDTO reservationDTO) {
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHospede.class.getResource("/imagenes/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -291,16 +299,27 @@ public class RegistroHospede extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				GuestController guestController = new GuestController();
+				ReservationController reservationController = new ReservationController();
 				GuestDTO dto = new GuestDTO();
 				dto.setName(txtNome.getText());
 				dto.setLastName(txtSobrenome.getText());
 				dto.setPhone(txtTelefone.getText());
 				
-				dto.setDateBirth(Date.valueOf(txtDataN.toString()));
+	// ====================================================================================
+				java.util.Date dateN = new java.util.Date();
+				dateN = txtDataN.getDate();
+				SimpleDateFormat formatterS = new SimpleDateFormat("yyyy-MM-dd");
+				String formatS = formatterS.format(dateN);
 				
-				dto.setIdReservation(getIdReserva());
+				dto.setDateBirth(Date.valueOf(formatS));
+
 				dto.setCountry(txtNacionalidade.getSelectedItem().toString());
-				guestController.insert(dto);
+
+				dto = guestController.insert(dto);
+
+				reservationDTO.setIdReservation(dto.getId());
+				reservationController.insert(reservationDTO);
+				
 				JOptionPane.showInternalMessageDialog(null, "Registro inserido com sucesso ", "Inserir", 1);
 				ReservasView reservas = new ReservasView();
 				reservas.setVisible(true);
@@ -336,11 +355,11 @@ public class RegistroHospede extends JFrame {
 		logo.setIcon(new ImageIcon(RegistroHospede.class.getResource("/imagenes/Ha-100px.png")));
 	}
 
-	public Integer getIdReserva() {
+	public Long getIdReserva() {
 		return idReserva;
 	}
 
-	public void setIdReserva(Integer idReserva) {
+	public void setIdReserva(Long idReserva) {
 		txtNreserva.setText(idReserva.toString());
 		this.idReserva = idReserva;
 	}

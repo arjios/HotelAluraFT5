@@ -23,7 +23,7 @@ public class GuestDAO implements GuestRepository {
 		try {
 			Connection con = FactoryConnection.createPoolConnection();
 			Statement st =  con.createStatement();
-			st.execute("SELECT * FROM guest");
+			st.execute("SELECT * FROM tb_guest");
 			ResultSet rs = st.getResultSet();
 			while(rs.next()) {
 				Guest guest = new Guest();
@@ -32,7 +32,6 @@ public class GuestDAO implements GuestRepository {
 				guest.setLastName(rs.getString("lastName"));
 				guest.setPhone(rs.getString("phone"));				
 				guest.setDateBirth(rs.getDate("dateBirth").toLocalDate());
-				guest.setIdReservation(rs.getInt("idReservation"));
 				guest.setCountry(rs.getString("country"));
 				guests.add(guest);
 			}
@@ -48,24 +47,27 @@ public class GuestDAO implements GuestRepository {
 	}
 
 	@Override
-	public void insert(Guest guest) {
-		String sql = "INSERT INTO guest" +
-					"(name, lastName, phone, dateBirth, idReservation, country)" +
-					"VALUES (?, ?, ?, ?, ?, ?)";
+	public Guest insert(Guest guest) {
+		String sql = "INSERT INTO tb_guest" +
+					"(name, lastName, phone, dateBirth, country)" +
+					"VALUES (?, ?, ?, ?, ?)";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
 			con = FactoryConnection.createPoolConnection();
-			ps = con.prepareStatement(sql);
-			
+			ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, guest.getName());
 			ps.setString(2, guest.getLastName());
 			ps.setNString(3,  guest.getPhone());		
 			LocalDate localDate = guest.getDateBirth();
 			ps.setDate(4,  Date.valueOf(localDate));
-			ps.setLong(5, guest.getIdReservation());
-			ps.setNString(6, guest.getCountry());
-			ps.execute();
+			ps.setNString(5, guest.getCountry());
+			ps.executeUpdate();
+			ResultSet rs = ps.getGeneratedKeys();
+			if(rs.next()) {
+				guest.setId(rs.getLong(1));
+			}
+			return guest;
 			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -81,13 +83,14 @@ public class GuestDAO implements GuestRepository {
 				e.printStackTrace();
 			}
 		}
+		return guest;
 	}
 
 	@Override
 	public Guest update(Long id_reserva, Guest guest) {
-		String sql = "UPDATE guest " + 
+		String sql = "UPDATE tb_guest " + 
 				"SET name = ?, lastName = ?, phone = ?, dateBirth = ?, country  = ? " + 
-				"WHERE idReservation = ? ";
+				"WHERE id = ? ";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
@@ -100,7 +103,7 @@ public class GuestDAO implements GuestRepository {
 			LocalDate localDate = guest.getDateBirth();
 			ps.setDate(4,  Date.valueOf(localDate));
 			ps.setString(5,  guest.getCountry());
-			ps.setLong(6, guest.getIdReservation());
+			ps.setLong(6, guest.getId());
 			ps.execute();
 
 		} catch (Exception e) {
@@ -112,7 +115,7 @@ public class GuestDAO implements GuestRepository {
 
 	@Override
 	public Long delete(Long id) {
-		String sql = "DELETE FROM guest WHERE id_reserva = ?";
+		String sql = "DELETE FROM tb_guest WHERE id = ?";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
