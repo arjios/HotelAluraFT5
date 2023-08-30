@@ -16,9 +16,9 @@ import hotel.repositories.ReservationRepository;
 
 public class ReservationDAO implements ReservationRepository {
 	
-	private Reservation reservation;
+	private Reservation reservation = new Reservation();
 	private Set<Reservation> reservations = new HashSet<>();
-
+	
 	@Override
 	public Set<Reservation> findAll() {
 		try {
@@ -47,13 +47,13 @@ public class ReservationDAO implements ReservationRepository {
 	}
 
 	@Override
-	public Reservation findByReservation(Long id) {
-		String st = "SELECT id, checkin, checkout, value, payment  FROM tb_reservation "
+	public Reservation findByReservation(Long idIndex) {
+		String st = "SELECT id, checkin, checkout, value, payment, idReservation FROM tb_reservation "
 				+ "WHERE idReservation = ?";
 		try {
 			Connection con = FactoryConnection.createPoolConnection();
 			PreparedStatement ps = con.prepareStatement(st);
-			ps.setLong(1, id);
+			ps.setLong(1, idIndex);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				reservation.setId(rs.getLong("id"));
@@ -62,6 +62,7 @@ public class ReservationDAO implements ReservationRepository {
 				reservation.setValue(rs.getDouble("value"));	
 				reservation.setPayment(rs.getNString("payment"));
 				reservation.setIdReservation(rs.getLong("idReservation"));
+				ps.execute();
 			}
 			rs.close();
 			ps.close();

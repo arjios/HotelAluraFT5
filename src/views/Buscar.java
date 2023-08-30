@@ -7,12 +7,14 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.Iterator;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -22,8 +24,14 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
-@SuppressWarnings("serial")
+import hotel.controllers.GuestController;
+import hotel.controllers.ReservationController;
+import hotel.dto.GuestDTO;
+import hotel.dto.ReservationDTO;
+
+
 public class Buscar extends JFrame {
+	private static final long serialVersionUID = 1L;
 
 	private JPanel contentPane;
 	private JTextField txtBuscar;
@@ -88,31 +96,39 @@ public class Buscar extends JFrame {
 		tbReservas = new JTable();
 		tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbReservas.setFont(new Font("Roboto", Font.PLAIN, 16));
+		tbReservas.setBackground(Color.YELLOW);
+		panel.addTab("Reservas", new ImageIcon(Buscar.class.getResource("/imagenes/reservado.png")), tbReservas, null);
 		modelo = (DefaultTableModel) tbReservas.getModel();
 		modelo.addColumn("Numero de Reserva");
 		modelo.addColumn("Data Check In");
 		modelo.addColumn("Data Check Out");
 		modelo.addColumn("Valor");
 		modelo.addColumn("Forma de Pago");
-		JScrollPane scroll_table = new JScrollPane(tbReservas);
-		panel.addTab("Reservas", new ImageIcon(Buscar.class.getResource("/imagenes/reservado.png")), scroll_table, null);
-		scroll_table.setVisible(true);
-		
-		
+		modelo.addRow(new Object[] {"Numero de Reserva",
+				"Data Check In",
+				"Data Check Out",
+				"Valor",
+				"Forma de Pago"});
+
 		tbHospedes = new JTable();
 		tbHospedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		tbHospedes.setFont(new Font("Roboto", Font.PLAIN, 16));
+		panel.addTab("Hóspedes", new ImageIcon(Buscar.class.getResource("/imagenes/pessoas.png")), tbHospedes, null);
 		modeloHospedes = (DefaultTableModel) tbHospedes.getModel();
-		modeloHospedes.addColumn("Numero de Hóspede");
+		modeloHospedes.addColumn("Hóspede ID");
 		modeloHospedes.addColumn("Nome");
 		modeloHospedes.addColumn("Sobrenome");
-		modeloHospedes.addColumn("Data de Nascimento");
+		modeloHospedes.addColumn("Nascimento");
 		modeloHospedes.addColumn("Nacionalidade");
 		modeloHospedes.addColumn("Telefone");
 		modeloHospedes.addColumn("Numero de Reserva");
-		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHospedes);
-		panel.addTab("Huéspedes", new ImageIcon(Buscar.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
-		scroll_tableHuespedes.setVisible(true);
+		modeloHospedes.addRow(new Object[] {"Hóspede ID",
+				"Nome",
+				"Sobrenome",
+				"Nascimento",
+				"Nacionalidade",
+				"Telefone",
+				"Reserva ID"});
 		
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setIcon(new ImageIcon(Buscar.class.getResource("/imagenes/Ha-100px.png")));
@@ -209,9 +225,43 @@ public class Buscar extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				((DefaultTableModel) tbHospedes.getModel()).setRowCount(1);
+				((DefaultTableModel) tbReservas.getModel()).setRowCount(1);
+				ReservationController reservationController = new ReservationController();
+				GuestController guestController = new GuestController();
+				Set<GuestDTO> hospedes = guestController.findAll();
+				Iterator<GuestDTO> ith = hospedes.iterator();
+				
+				GuestDTO hdto = new GuestDTO();
+				ReservationDTO rdto = new ReservationDTO();
+				
+				tbReservas.setModel(modelo);
+				tbHospedes.setModel(modeloHospedes);
+				
+				while(ith.hasNext()) {
+					hdto = ith.next();
+					modeloHospedes.addRow(new Object[] {hdto.getId(),
+											hdto.getName(),
+											hdto.getLastName(),
+											hdto.getDateBirth(),
+											hdto.getCountry(),
+											hdto.getPhone(),
+											hdto.getId()});
+					rdto  = reservationController.findReservaByName(hdto.getId());
+					if(rdto.getIdReservation() != null) {
+						if(rdto.getIdReservation().equals(hdto.getId())) {
+							modelo.addRow(new Object[] {rdto.getIdReservation(),
+									rdto.getCheckin(),
+									rdto.getCheckout(),
+									rdto.getValue(),
+									rdto.getPayment()});
+						}
+					}
+				}
+				
 			}
 		});
+
 		btnbuscar.setLayout(null);
 		btnbuscar.setBackground(new Color(12, 138, 199));
 		btnbuscar.setBounds(748, 125, 122, 35);
@@ -238,6 +288,34 @@ public class Buscar extends JFrame {
 		lblEditar.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblEditar.setBounds(0, 0, 122, 35);
 		btnEditar.add(lblEditar);
+
+		
+		
+		
+		//UPDATE **********************************************************************************
+		// ****************************************************************************************
+		
+		btnEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				ReservationController reservationController = new ReservationController();
+				GuestController guestController = new GuestController();
+				int linhar = tbReservas.getSelectedRow();
+				int colunar = tbReservas.getSelectedColumn();
+				int linhah = tbHospedes.getSelectedRow();
+				int colunah = tbHospedes.getSelectedColumn();
+				if(linhar > 0 && colunar > 0) {
+					reservationController.update(modelo);
+					tbReservas.clearSelection();
+					linhar = -1;
+				}
+				if(linhah > 0 && colunah > 0) {
+					guestController.update(modeloHospedes);
+					tbHospedes.clearSelection();
+					linhah = -1;
+				}
+			}	
+		});
 		
 		JPanel btnDeletar = new JPanel();
 		btnDeletar.setLayout(null);
@@ -253,6 +331,34 @@ public class Buscar extends JFrame {
 		lblExcluir.setBounds(0, 0, 122, 35);
 		btnDeletar.add(lblExcluir);
 		setResizable(false);
+		
+		btnDeletar.addMouseListener(new MouseAdapter() {
+			ReservationController reservationController = new ReservationController();
+			GuestController guestController = new GuestController();
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Object obj;
+				int idx, idxr, idxh, id_reserva = 0;
+				idxr = tbReservas.getSelectedRow();
+				idxh = tbHospedes.getSelectedRow();
+				if(idxr == -1) {
+					idx = idxh;
+					obj = tbHospedes.getValueAt(idxh, 6);
+				} else {
+					idx = idxr;
+					obj = tbReservas.getValueAt(idxr, 0);
+				}
+				id_reserva = Integer.parseInt(obj.toString());
+				if(reservationController.deletarReserva(obj) != null) {
+					guestController.delete(obj);
+					((DefaultTableModel) tbReservas.getModel()).removeRow(idx);
+					((DefaultTableModel) tbHospedes.getModel()).removeRow(idx);
+					JOptionPane.showInternalMessageDialog(null, "Registro deletado com sucesso ", "Deletar", 1);
+				} else {
+					JOptionPane.showInternalMessageDialog(null, "Erro ao deletar o registro ", "Deletar", 0);
+				}
+			}	
+		});
 	}
 	
 	//Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"	
@@ -265,5 +371,5 @@ public class Buscar extends JFrame {
 	        int x = evt.getXOnScreen();
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
-}
+	    }
 }
