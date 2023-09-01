@@ -100,21 +100,25 @@ public class ReservationDAO implements ReservationRepository {
 
 	@Override
 	public Reservation update(Long id, Reservation reservation) {
+		System.out.println(id);
 		String sql = "UPDATE tb_reservation " + 
-				"SET checkin = ?, checkout = ?, value = ?, payment = ? " + 
-				"WHERE idReservation = ? ";
+				"SET id = ?, checkin = ?, checkout = ?, value = ?, payment = ? " + 
+				"WHERE idReservation = ?";
 		Connection con = null;
 		PreparedStatement ps = null;
 		try {
 			con = FactoryConnection.createPoolConnection();
 			ps = con.prepareStatement(sql);
-			ps.setDate(1, reservation.getCheckin());
-			ps.setDate(2, reservation.getCheckout());
-			ps.setDouble(3, reservation.getValue());
-			ps.setString(4, reservation.getPayment());
-			ps.setLong(5, reservation.getIdReservation());
+			ps.setLong(1, id);
+			ps.setDate(2, reservation.getCheckin());
+			ps.setDate(3, reservation.getCheckout());
+			ps.setDouble(4, reservation.getValue());
+			ps.setString(5, reservation.getPayment());
+			ps.setLong(6, reservation.getIdReservation());
 			ps.execute();
-
+			System.out.println("Reserva: " + reservation.getIdReservation());
+			ps.close();
+			con.close();
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Ocorreu erro na leitura da Reserva.", "Error: Reservation Update.", 0);
 			e.printStackTrace();

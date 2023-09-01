@@ -28,30 +28,22 @@ public class ReservationController {
 		return reservationDTO;
 	}
 
-	public ReservationDTO update(DefaultTableModel dtm) {
+	public ReservationDTO update(Integer linha, DefaultTableModel dtm) {
 
 		ReservationDTO rdto = new ReservationDTO();
-		for(int i=1; i< dtm.getRowCount(); i++) {
-			
-			rdto = reservationService.findByReservation(Long.valueOf(dtm.getValueAt(i, 0).toString()));
-			
-			rdto.setCheckin(Date.valueOf(dtm.getValueAt(i, 1).toString()));
+		rdto.setId(Long.valueOf(dtm.getValueAt(linha, 0).toString()));
+		rdto.setCheckin(Date.valueOf(dtm.getValueAt(linha, 1).toString()));
+		rdto.setCheckout(Date.valueOf(dtm.getValueAt(linha, 2).toString()));
+		rdto.setValue(Double.valueOf(dtm.getValueAt(linha, 3).toString()));
+		rdto.setPayment(dtm.getValueAt(linha, 4).toString());
+		rdto.setIdReservation(Long.valueOf(dtm.getValueAt(linha, 5).toString()));
 
-			rdto.setCheckout(Date.valueOf(dtm.getValueAt(i, 2).toString()));
-
-			rdto.setValue(Double.valueOf(dtm.getValueAt(i, 3).toString()));
-			
-			rdto.setPayment(dtm.getValueAt(i, 4).toString());
-			
-			rdto.setIdReservation(Long.valueOf((dtm.getValueAt(i, 5).toString())));
-
-			reservationService.update(Long.valueOf(dtm.getValueAt(i, 0).toString()), rdto);
-		}
+		reservationService.update(Long.valueOf(dtm.getValueAt(linha, 5).toString()), rdto);		
+		
 		return reservationDTO;
 	}
 	
 	public Long deletarReserva(Object obj) {
-		System.out.println("Deleta reservas: " + Long.valueOf(obj.toString()));
 		Long id = reservationService.delete(Long.valueOf(obj.toString()));
 		return id;
 	}

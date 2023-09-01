@@ -104,11 +104,13 @@ public class Buscar extends JFrame {
 		modelo.addColumn("Data Check Out");
 		modelo.addColumn("Valor");
 		modelo.addColumn("Forma de Pago");
+		modelo.addColumn("Localizador");
 		modelo.addRow(new Object[] {"Numero de Reserva",
 				"Data Check In",
 				"Data Check Out",
 				"Valor",
-				"Forma de Pago"});
+				"Forma de Pago",
+				"Localizador"});
 
 		tbHospedes = new JTable();
 		tbHospedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -250,11 +252,12 @@ public class Buscar extends JFrame {
 					rdto  = reservationController.findReservaByName(hdto.getId());
 					if(rdto.getIdReservation() != null) {
 						if(rdto.getIdReservation().equals(hdto.getId())) {
-							modelo.addRow(new Object[] {rdto.getIdReservation(),
+							modelo.addRow(new Object[] {rdto.getId(),
 									rdto.getCheckin(),
 									rdto.getCheckout(),
 									rdto.getValue(),
-									rdto.getPayment()});
+									rdto.getPayment(),
+									rdto.getIdReservation()});
 						}
 					}
 				}
@@ -305,7 +308,7 @@ public class Buscar extends JFrame {
 				int linhah = tbHospedes.getSelectedRow();
 				int colunah = tbHospedes.getSelectedColumn();
 				if(linhar > 0 && colunar > 0) {
-					reservationController.update(modelo);
+					reservationController.update(linhar, modelo);
 					tbReservas.clearSelection();
 					linhar = -1;
 				}

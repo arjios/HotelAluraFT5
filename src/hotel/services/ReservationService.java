@@ -44,13 +44,14 @@ public class ReservationService {
 	
 	public Reservation update(Long id, ReservationDTO dto) {
 		Reservation reservation = new Reservation();
+		reservation.setId(dto.getId());
 		reservation.setCheckin(dto.getCheckin());
 		reservation.setCheckout(dto.getCheckout());
 		dto.setValue(CalcDaily.valorDiarias(500.00, reservation.getCheckin(), reservation.getCheckout()));
-		System.out.println("Reservation: " + dto.getValue());
+		reservation.setValue(dto.getValue());
 		reservation.setPayment(dto.getPayment());
-		reservation.setIdReservation(dto.getIdReservation());
-		return reservationRepository.update(id, reservation);
+		reservation.setIdReservation(id);
+		return reservationRepository.update(dto.getIdReservation(), reservation);
 	}
 
 	public Long delete(Long id) {
