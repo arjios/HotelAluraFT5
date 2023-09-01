@@ -127,13 +127,16 @@ public class ReservationDAO implements ReservationRepository {
 		String st = "DELETE FROM tb_reservation WHERE id = ?";
 		Connection con = null;
 		PreparedStatement ps = null;
+		System.out.println("Reservation DAO Delete==================");
 		try {
 			con = FactoryConnection.createPoolConnection();
 			ps = con.prepareStatement(st);
 			ps.setLong(1, id);
 			ps.execute();
+			con.close();
+			ps.close();
 		} catch(Exception e) {
-			System.out.println("Ocorreu erro na leitura na Delete reserva.");
+			System.out.println("Ocorreu erro ao deletar a Reserva: " + id);
 			id = null;
 			e.printStackTrace();
 		}

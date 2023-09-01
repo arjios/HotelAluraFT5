@@ -148,15 +148,17 @@ public class ReservasView extends JFrame {
 		txtDataS.getCalendarButton().setBounds(267, 1, 21, 31);
 		txtDataS.setBackground(Color.WHITE);
 		txtDataS.setFont(new Font("Roboto", Font.PLAIN, 18));
-
 		txtDataS.addPropertyChangeListener(new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent evt) {
-//				if(txtDataE.getDate() != null && txtDataS.getDate() != null) {
-//					Double d = 500.00;
-//					txtValor.setText(CalcDaily.valorDiarias(d, 
-//							txtDataE.getDate(), 
-//							txtDataS.getDate()).toString() + "0");
-//				}
+				ReservationController reservationController = new ReservationController();
+				if(txtDataE.getDate() != null && txtDataS.getDate() != null) {
+					Double d = 500.00;
+					SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+					String formatE = formatter.format(txtDataE.getDate());
+					String formatS = formatter.format(txtDataS.getDate());
+					Double value = reservationController.calcValue(d, Date.valueOf(formatE), Date.valueOf(formatS));
+					txtValor.setText(value.toString());
+				}
 			}
 		});
 		txtDataS.setDateFormatString("yyyy-MM-dd");
@@ -172,12 +174,10 @@ public class ReservasView extends JFrame {
 		txtValor.setEditable(false);
 		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-
 		txtValor.setColumns(10);
 		txtValor.setText("0,00");
-		
 		panel.add(txtValor);
-	
+		
 		JLabel lblValor = new JLabel("VALOR DA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
 		lblValor.setBounds(72, 303, 196, 14);

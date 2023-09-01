@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import hotel.dao.ReservationDAO;
+import hotel.dto.DailyDTO;
 import hotel.dto.ReservationDTO;
 import hotel.entities.Reservation;
 import hotel.repositories.ReservationRepository;
@@ -53,8 +54,18 @@ public class ReservationService {
 	}
 
 	public Long delete(Long id) {
+		System.out.println("Service delete: " + id);
 		reservationRepository.delete(id);
 		return id;
+	}
+	
+	public Double DailyTotalService(DailyDTO dailyDTO) {
+//		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd"); 
+//		String formatE = formatter.format(dailyDTO.dateCheckin());
+//		String formatS = formatter.format(dailyDTO.dateCheckout());
+//		java.sql.Date in = java.sql.Date.valueOf(formatE);
+//		java.sql.Date out = java.sql.Date.valueOf(formatS);
+		return CalcDaily.valorDiarias(dailyDTO.value(), dailyDTO.dateCheckin(), dailyDTO.dateCheckout());
 	}
 
 }

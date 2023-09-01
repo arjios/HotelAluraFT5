@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 
+import hotel.dto.DailyDTO;
 import hotel.dto.ReservationDTO;
 import hotel.services.ReservationService;
 
@@ -49,10 +50,15 @@ public class ReservationController {
 		return reservationDTO;
 	}
 	
-	
 	public Long deletarReserva(Object obj) {
+		System.out.println("Deleta reservas: " + Long.valueOf(obj.toString()));
 		Long id = reservationService.delete(Long.valueOf(obj.toString()));
 		return id;
+	}
+	
+	public Double calcValue(Double d, Date formatE, Date formatS) {
+		DailyDTO dailyDTO = new DailyDTO(d, formatE, formatS);
+		return reservationService.DailyTotalService(dailyDTO);
 	}
 	
 }

@@ -318,6 +318,7 @@ public class RegistroHospede extends JFrame {
 				dto = guestController.insert(dto);
 
 				reservationDTO.setIdReservation(dto.getId());
+				txtNreserva.setText((reservationDTO.getIdReservation()).toString());
 				reservationController.insert(reservationDTO);
 				
 				JOptionPane.showInternalMessageDialog(null, "Registro inserido com sucesso ", "Inserir", 1);
