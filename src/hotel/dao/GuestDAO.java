@@ -103,8 +103,10 @@ public class GuestDAO implements GuestRepository {
 			LocalDate localDate = guest.getDateBirth();
 			ps.setDate(4,  Date.valueOf(localDate));
 			ps.setString(5,  guest.getCountry());
-			ps.setLong(6, guest.getId());
+			ps.setLong(6, id_reserva);
 			ps.execute();
+			ps.close();
+			con.close();
 
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, "Ocorreu erro na leitura de Guest.", "Error: Guest Update.", 0);

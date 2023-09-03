@@ -5,13 +5,14 @@ import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 
+import hotel.dao.ReservationDAO;
 import hotel.dto.DailyDTO;
 import hotel.dto.ReservationDTO;
 import hotel.services.ReservationService;
 
 public class ReservationController {
 
-	private ReservationService reservationService = new ReservationService();
+	private ReservationService reservationService = new ReservationService(new ReservationDAO());
 	private ReservationDTO reservationDTO = new ReservationDTO();
 
 	public Set<ReservationDTO> findAllReservas() {

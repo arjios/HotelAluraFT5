@@ -3,7 +3,6 @@ package hotel.services;
 import java.util.HashSet;
 import java.util.Set;
 
-import hotel.dao.ReservationDAO;
 import hotel.dto.DailyDTO;
 import hotel.dto.ReservationDTO;
 import hotel.entities.Reservation;
@@ -12,7 +11,13 @@ import hotel.services.utils.CalcDaily;
 
 public class ReservationService {
 	
-	ReservationRepository reservationRepository = new ReservationDAO();
+//	ReservationRepository reservationRepository = new ReservationDAO();
+	
+	ReservationRepository reservationRepository;
+	
+	public ReservationService(ReservationRepository reservationRepository) {
+		this.reservationRepository = reservationRepository;
+	}
 	
 	public Set<ReservationDTO> findAll() {
 		Set<ReservationDTO> dto = new HashSet<>();

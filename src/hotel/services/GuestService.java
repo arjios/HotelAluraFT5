@@ -3,16 +3,20 @@ package hotel.services;
 import java.util.HashSet;
 import java.util.Set;
 
-import hotel.dao.GuestDAO;
+import hotel.dao.ReservationDAO;
 import hotel.dto.GuestDTO;
 import hotel.entities.Guest;
 import hotel.repositories.GuestRepository;
 
 public class GuestService {	
 	
-	GuestRepository guestRepository = new GuestDAO();
+	GuestRepository guestRepository;
 	
-	ReservationService reservationService = new ReservationService();
+	public GuestService(GuestRepository guestRepository) {
+		this.guestRepository = guestRepository;
+	}
+	
+	ReservationService reservationService = new ReservationService(new ReservationDAO());
 	
 	public Set<GuestDTO> findAll() {
 		Set<GuestDTO> guestsDTO = new HashSet<>();

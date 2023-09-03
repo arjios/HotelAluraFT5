@@ -5,13 +5,13 @@ import java.util.Set;
 
 import javax.swing.table.DefaultTableModel;
 
+import hotel.dao.GuestDAO;
 import hotel.dto.GuestDTO;
-import hotel.entities.Guest;
 import hotel.services.GuestService;
 
 public class GuestController {
 
-	GuestService guestService = new GuestService();
+	GuestService guestService = new GuestService(new GuestDAO());
 	
 	public Set<GuestDTO> findAll() {
 		Set<GuestDTO> guests = guestService.findAll();
@@ -22,18 +22,19 @@ public class GuestController {
 		return guestService.insert(dto);
 	}
 	
-	public GuestDTO update(DefaultTableModel dtm) {
+	public GuestDTO update(Integer linha, DefaultTableModel dtm) {
+		
 		GuestDTO dto = new GuestDTO();
 		
-		for(int i=1; i<dtm.getRowCount(); i++) {
-			dto.setId(Long.valueOf(dtm.getValueAt(i, 0).toString()));
-			dto.setName(dtm.getValueAt(i, 1).toString());
-			dto.setLastName(dtm.getValueAt(i, 2).toString());
-			dto.setDateBirth(Date.valueOf(dtm.getValueAt(i, 3).toString()));		
-			dto.setCountry(dtm.getValueAt(i, 4).toString());
-			dto.setPhone(dtm.getValueAt(i, 5).toString());
-			dto = new GuestDTO();
-		}
+		dto.setId(Long.valueOf(dtm.getValueAt(linha, 0).toString()));
+		dto.setName(dtm.getValueAt(linha, 1).toString());
+		dto.setLastName(dtm.getValueAt(linha, 2).toString());
+		dto.setDateBirth(Date.valueOf(dtm.getValueAt(linha, 3).toString()));		
+		dto.setCountry(dtm.getValueAt(linha, 4).toString());
+		dto.setPhone(dtm.getValueAt(linha, 5).toString());
+		
+		guestService.update(dto.getId(), dto);		
+
 		return dto;
 	}
 

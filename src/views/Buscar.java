@@ -313,7 +313,7 @@ public class Buscar extends JFrame {
 					linhar = -1;
 				}
 				if(linhah > 0 && colunah > 0) {
-					guestController.update(modeloHospedes);
+					guestController.update(linhah, modeloHospedes);
 					tbHospedes.clearSelection();
 					linhah = -1;
 				}
